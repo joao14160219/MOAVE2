@@ -1,1361 +1,1219 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Moave — Móveis que contam histórias.</title>
-  <meta name="description" content="Moave — Móveis que contam histórias. Design brasileiro de alto padrão." />
+  <title>Moave — Casa e Decoração</title>
+  <meta name="description" content="Moave — Móveis bonitos e acessíveis para todos os lares. Monte seu ambiente dos sonhos sem gastar muito." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
   <style>
-    /* ─── Reset & Base ─────────────────────────────────────────── */
+
+    /* ── Reset ─────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream:      #F5F0EB;
-      --charcoal:   #1C1A18;
-      --terra:      #C4622D;
-      --sage:       #7A8C6E;
-      --warm-mid:   #2E2B27;
-      --muted:      #8A8278;
-      --border:     rgba(28,26,24,.12);
+      --white:    #FDFCFA;
+      --cream:    #F4EFE8;
+      --charcoal: #2C2A27;
+      --mid:      #6B6560;
+      --border:   #E2DAD0;
+      --terra:    #C4622D;
+      --sage:     #6A8060;
+      --yellow:   #D9A84E;
     }
 
-    html { scroll-behavior: smooth; font-size: 16px; }
+    html { scroll-behavior: smooth; }
 
     body {
-      background: var(--cream);
+      background: var(--white);
       color: var(--charcoal);
       font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.6;
       overflow-x: hidden;
-      cursor: none;
     }
 
-    /* ─── Custom Cursor ────────────────────────────────────────── */
-    #cursor-dot {
-      position: fixed;
-      width: 8px; height: 8px;
-      background: var(--charcoal);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: transform .1s, width .3s, height .3s, background .3s;
-      mix-blend-mode: multiply;
-    }
-    #cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border: 1px solid var(--charcoal);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: transform .18s cubic-bezier(.25,.46,.45,.94), width .3s, height .3s, opacity .3s;
-      opacity: .5;
-    }
-    body.cursor-hover #cursor-dot { width: 12px; height: 12px; background: var(--terra); }
-    body.cursor-hover #cursor-ring { width: 52px; height: 52px; opacity: .3; border-color: var(--terra); }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
 
-    /* ─── Grain Overlay ────────────────────────────────────────── */
-    #grain {
-      position: fixed;
-      inset: -50%;
-      width: 200%; height: 200%;
-      pointer-events: none;
-      z-index: 9990;
-      opacity: .025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      animation: grain-move 8s steps(10) infinite;
-    }
-    @keyframes grain-move {
-      0%   { transform: translate(0,0); }
-      10%  { transform: translate(-2%,-3%); }
-      20%  { transform: translate(3%,2%); }
-      30%  { transform: translate(-1%,3%); }
-      40%  { transform: translate(2%,-1%); }
-      50%  { transform: translate(-3%,2%); }
-      60%  { transform: translate(1%,-2%); }
-      70%  { transform: translate(-2%,1%); }
-      80%  { transform: translate(3%,-3%); }
-      90%  { transform: translate(-1%,2%); }
-      100% { transform: translate(0,0); }
+    /* ── Utilitários ───────────────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      font-size: .7rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--terra);
+      font-weight: 500;
+      margin-bottom: 12px;
     }
 
-    /* ─── Nav ──────────────────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+    .delay-1 { transition-delay: .1s; }
+    .delay-2 { transition-delay: .2s; }
+    .delay-3 { transition-delay: .3s; }
+    .delay-4 { transition-delay: .4s; }
+
+    /* ── Nav ───────────────────────────────────────────────────── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: sticky;
+      top: 0;
       z-index: 100;
-      padding: 28px 48px;
+      background: rgba(253,252,250,.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: padding .4s;
+      height: 64px;
     }
-    nav.scrolled { padding: 18px 48px; }
-    nav::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(245,240,235,.9) 0%, transparent 100%);
-      z-index: -1;
-      opacity: 0;
-      transition: opacity .4s;
-    }
-    nav.scrolled::after { opacity: 1; }
 
-    .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: 1.5rem;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--cream);
-      text-decoration: none;
-      transition: color .4s;
+    .nav-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
     }
-    nav.scrolled .nav-logo { color: var(--charcoal); }
+    .nav-brand-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 400;
+      font-size: 1.25rem;
+      letter-spacing: .06em;
+      color: var(--charcoal);
+      line-height: 1;
+    }
+    .nav-brand-sub {
+      font-size: .62rem;
+      font-weight: 400;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
 
     .nav-links {
       display: flex;
-      gap: 36px;
-      list-style: none;
+      gap: 4px;
     }
     .nav-links a {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: rgba(245,240,235,.7);
-      text-decoration: none;
-      transition: color .3s;
-      cursor: none;
+      font-size: .8rem;
+      font-weight: 400;
+      color: var(--mid);
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: background .2s, color .2s;
     }
-    nav.scrolled .nav-links a { color: var(--muted); }
-    .nav-links a:hover { color: var(--terra); }
+    .nav-links a:hover {
+      background: var(--cream);
+      color: var(--charcoal);
+    }
 
-    /* ─── Hero ─────────────────────────────────────────────────── */
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      background: var(--terra);
+      color: #fff !important;
+      font-size: .8rem;
+      font-weight: 500;
+      border-radius: 100px;
+      transition: background .2s, transform .15s;
+      cursor: pointer;
+    }
+    .nav-cta:hover { background: #b05526; transform: translateY(-1px); }
+
+    .nav-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .nav-menu-btn span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--charcoal);
+      margin: 5px 0;
+      border-radius: 2px;
+      transition: .3s;
+    }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
     #hero {
-      position: relative;
-      height: 100vh;
-      min-height: 600px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 0 48px 72px;
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 88vh;
+      align-items: center;
     }
 
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 40%;
-      display: block;
-      transform: scale(1.08);
-      transition: transform 8s cubic-bezier(.25,.46,.45,.94);
-    }
-
-    .hero-bg img.loaded {
-      transform: scale(1);
-    }
-
-    .hero-vline {
-      position: absolute;
-      left: 48px;
-      top: 0; bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent 0%, rgba(245,240,235,.15) 30%, rgba(245,240,235,.15) 70%, transparent 100%);
-      z-index: 2;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to top,  rgba(10,8,6,.92) 0%,  rgba(10,8,6,.45) 45%, rgba(10,8,6,.15) 100%),
-        linear-gradient(to right, rgba(10,8,6,.5) 0%, transparent 60%);
-      z-index: 2;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 3;
-      max-width: 680px;
-      will-change: transform;
-    }
-
-    .hero-tagline {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: rgba(245,240,235,.5);
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .hero-subtitle {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      font-weight: 300;
-      color: rgba(245,240,235,.65);
-      line-height: 1.6;
-      margin-bottom: 8px;
+    .hero-text {
+      padding: 72px 56px 72px 64px;
     }
 
     .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(4rem, 9vw, 8rem);
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
       font-weight: 300;
-      color: var(--cream);
-      line-height: .95;
-      letter-spacing: -.02em;
+      line-height: 1.15;
+      color: var(--charcoal);
+      margin-bottom: 20px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--terra);
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 420px;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
       margin-bottom: 48px;
     }
 
-    .hero-title em { font-style: italic; font-weight: 300; }
-
-    .btn-primary {
+    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      padding: 16px 32px;
-      background: transparent;
-      border: 1px solid rgba(245,240,235,.35);
-      color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: none;
-      transition: background .35s, border-color .35s, color .35s, gap .35s;
-      backdrop-filter: blur(4px);
-    }
-    .btn-primary:hover {
-      background: var(--terra);
-      border-color: var(--terra);
-      gap: 20px;
-    }
-    .btn-arrow {
-      display: inline-block;
-      width: 16px; height: 1px;
-      background: currentColor;
-      position: relative;
-    }
-    .btn-arrow::after {
-      content: '';
-      position: absolute;
-      right: 0; top: -3px;
-      width: 6px; height: 6px;
-      border-right: 1px solid currentColor;
-      border-top: 1px solid currentColor;
-      transform: rotate(45deg);
-    }
-
-    .hero-bottom {
-      position: absolute;
-      bottom: 72px; right: 48px;
-      z-index: 3;
-      text-align: right;
-    }
-    .hero-bottom p {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      color: rgba(245,240,235,.45);
-      letter-spacing: .08em;
-      line-height: 1.8;
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       gap: 8px;
-      opacity: .4;
-      animation: bounce 2s ease-in-out infinite;
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: .875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform .15s, background .2s;
+      border: none;
+      text-decoration: none;
     }
-    .scroll-hint span {
-      font-size: .65rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
+    .btn:hover { transform: translateY(-2px); }
+    .btn-fill {
+      background: var(--charcoal);
+      color: #fff;
     }
-    .scroll-hint-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, var(--cream), transparent);
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50%       { transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* ─── About ────────────────────────────────────────────────── */
-    #about {
-      padding: 120px 48px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .about-label {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .7rem;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--terra);
-      margin-bottom: 24px;
-      display: block;
-    }
-
-    .about-heading {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 4vw, 3.5rem);
-      font-weight: 300;
-      line-height: 1.15;
-      letter-spacing: -.01em;
+    .btn-fill:hover { background: var(--terra); }
+    .btn-ghost {
+      background: transparent;
       color: var(--charcoal);
+      border: 1.5px solid var(--border);
     }
-    .about-heading em { font-style: italic; color: var(--sage); }
+    .btn-ghost:hover { border-color: var(--charcoal); background: var(--cream); }
 
-    .about-text {
-      font-size: .9rem;
-      line-height: 1.85;
-      color: var(--muted);
-      max-width: 440px;
-    }
-
-    .about-stats {
+    .hero-trust {
       display: flex;
-      gap: 48px;
-      margin-top: 48px;
-      padding-top: 48px;
-      border-top: 1px solid var(--border);
+      gap: 28px;
     }
-
-    .stat-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.5rem;
+    .trust-item strong {
+      display: block;
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem;
       font-weight: 300;
       color: var(--charcoal);
       line-height: 1;
-      display: block;
     }
-    .stat-label {
-      font-size: .7rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 6px;
-      display: block;
+    .trust-item span {
+      font-size: .72rem;
+      color: var(--mid);
+      letter-spacing: .06em;
     }
 
-    /* ─── Collection ───────────────────────────────────────────── */
-    #collection { padding: 0 0 120px; overflow: hidden; }
-
-    .collection-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      padding: 80px 48px 60px;
-    }
-
-    .section-label {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .7rem;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .section-heading {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 300;
-      letter-spacing: -.01em;
-      color: var(--charcoal);
-    }
-
-    .collection-link {
-      font-size: .75rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      cursor: none;
-      position: relative;
-      transition: color .3s;
-    }
-    .collection-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0; right: 0;
-      height: 1px;
-      background: var(--terra);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform .3s;
-    }
-    .collection-link:hover { color: var(--terra); }
-    .collection-link:hover::after { transform: scaleX(1); }
-
-    .cards-track-wrap {
-      overflow-x: auto;
-      overflow-y: visible;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      padding: 0 48px 20px;
-      cursor: grab;
-    }
-    .cards-track-wrap:active { cursor: grabbing; }
-    .cards-track-wrap::-webkit-scrollbar { display: none; }
-
-    .cards-track {
-      display: flex;
-      gap: 24px;
-      width: max-content;
-      align-items: stretch;
-    }
-
-    .product-card {
-      flex: 0 0 340px;
-      border-radius: 2px;
+    .hero-photo {
+      height: 88vh;
       overflow: hidden;
-      cursor: none;
       position: relative;
-      transition: transform .5s cubic-bezier(.25,.46,.45,.94);
     }
-    .product-card:hover { transform: translateY(-8px); }
-
-    .card-visual { height: 420px; position: relative; overflow: hidden; }
-
-    .card-bg {
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero-photo-badge {
       position: absolute;
-      inset: 0;
-      transition: transform .7s cubic-bezier(.25,.46,.45,.94);
-    }
-    .product-card:hover .card-bg { transform: scale(1.05); }
-
-    .card-bg-1 { background: linear-gradient(160deg, #d4c5b0 0%, #b8a898 40%, #8c7b6a 100%); }
-    .card-bg-2 { background: linear-gradient(160deg, #2a3328 0%, #3d4f3a 40%, #5a7054 100%); }
-    .card-bg-3 { background: linear-gradient(160deg, #c4622d 0%, #9e4e24 40%, #7a3b1c 100%); }
-    .card-bg-4 { background: linear-gradient(160deg, #2a2825 0%, #1e1c1a 40%, #141210 100%); }
-
-    .furniture-silhouette {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .chair { width: 120px; height: 160px; bottom: 30px; }
-    .chair::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 25%;
-      width: 50%; height: 70px;
-      background: rgba(245,240,235,.12);
-      border-radius: 2px 2px 0 0;
-    }
-    .chair::after {
-      content: '';
-      position: absolute;
-      bottom: 70px; left: 10%;
-      width: 80%; height: 50px;
-      background: rgba(245,240,235,.15);
-      border-radius: 4px 4px 0 0;
-    }
-
-    .sofa { width: 200px; height: 120px; bottom: 30px; }
-    .sofa::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 100%; height: 60px;
-      background: rgba(245,240,235,.12);
-      border-radius: 4px 4px 0 0;
-    }
-    .sofa::after {
-      content: '';
-      position: absolute;
-      bottom: 50px; left: 5%;
-      width: 90%; height: 50px;
-      background: rgba(245,240,235,.1);
-      border-radius: 4px 4px 0 0;
-    }
-
-    .table-piece { width: 180px; height: 100px; bottom: 30px; }
-    .table-piece::before {
-      content: '';
-      position: absolute;
-      bottom: 30px; left: 0;
-      width: 100%; height: 12px;
-      background: rgba(245,240,235,.18);
-      border-radius: 2px;
-    }
-    .table-piece::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 20%;
-      width: 60%; height: 30px;
-      background: rgba(245,240,235,.1);
-      border-left: 1px solid rgba(245,240,235,.1);
-      border-right: 1px solid rgba(245,240,235,.1);
-    }
-
-    .shelf { width: 140px; height: 200px; bottom: 20px; }
-    .shelf::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 5%;
-      width: 5%; height: 100%;
-      background: rgba(245,240,235,.1);
-    }
-    .shelf::after {
-      content: '';
-      position: absolute;
-      bottom: 0; right: 5%;
-      width: 5%; height: 100%;
-      background: rgba(245,240,235,.1);
-    }
-
-    .card-deco {
-      position: absolute;
-      top: 24px; right: 24px;
-      width: 60px; height: 60px;
-      border: 1px solid rgba(245,240,235,.12);
-      border-radius: 50%;
-    }
-    .card-deco-2 {
-      position: absolute;
-      top: 40px; left: 40px;
-      width: 1px; height: 80px;
-      background: rgba(245,240,235,.1);
-    }
-
-    .card-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(12,10,8,.6) 0%, transparent 60%);
-    }
-
-    .card-info { padding: 24px; background: var(--cream); }
-
-    .card-num {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .65rem;
-      letter-spacing: .2em;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .card-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-weight: 300;
-      color: var(--charcoal);
-      line-height: 1.2;
-      margin-bottom: 4px;
-    }
-
-    .card-desc { font-size: .8rem; color: var(--muted); margin-bottom: 16px; }
-
-    .card-price {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      color: var(--terra);
+      bottom: 28px;
+      left: 28px;
+      background: rgba(253,252,250,.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
+    }
+    .badge-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--sage);
+      flex-shrink: 0;
+    }
+    .badge-text strong {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    .badge-text span {
+      font-size: .7rem;
+      color: var(--mid);
     }
 
-    .card-cta {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .65rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      cursor: none;
-      transition: color .3s;
-    }
-    .product-card:hover .card-cta { color: var(--terra); }
-
-    .track-progress {
-      width: calc(100% - 96px);
-      margin: 24px 48px 0;
-      height: 1px;
-      background: var(--border);
-    }
-    .track-progress-bar {
-      height: 100%;
+    /* ── Banner de proposta ────────────────────────────────────── */
+    #banner {
       background: var(--charcoal);
-      width: 25%;
-      transition: width .1s;
-    }
-
-    /* ─── Manifesto ────────────────────────────────────────────── */
-    #manifesto {
-      min-height: 100vh;
-      background: var(--charcoal);
+      padding: 20px 64px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
+      gap: 48px;
       overflow: hidden;
-      padding: 120px 48px;
+    }
+    .banner-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(253,252,250,.7);
+      font-size: .8rem;
+      letter-spacing: .06em;
+      white-space: nowrap;
+    }
+    .banner-item svg { opacity: .6; flex-shrink: 0; }
+    .banner-sep {
+      width: 1px;
+      height: 18px;
+      background: rgba(253,252,250,.15);
+      flex-shrink: 0;
     }
 
-    .manifesto-bg-shapes { position: absolute; inset: 0; overflow: hidden; }
-    .mbg-1 {
-      position: absolute;
-      top: -10%; right: -5%;
-      width: 40vw; height: 60vh;
-      border: 1px solid rgba(245,240,235,.05);
-      border-radius: 50%;
-    }
-    .mbg-2 {
-      position: absolute;
-      bottom: -15%; left: -5%;
-      width: 30vw; height: 45vh;
-      border: 1px solid rgba(196,98,45,.08);
-      border-radius: 50%;
-    }
-    .mbg-line {
-      position: absolute;
-      top: 50%; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(245,240,235,.04), transparent);
+    /* ── Seção: Ambientes ──────────────────────────────────────── */
+    #ambientes {
+      padding: 96px 64px;
     }
 
-    .manifesto-content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      max-width: 900px;
-      will-change: transform;
-    }
-
-    .manifesto-pre {
-      font-size: .7rem;
-      letter-spacing: .3em;
-      text-transform: uppercase;
-      color: var(--terra);
+    .section-intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
       margin-bottom: 48px;
-      display: block;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .manifesto-quote {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 5vw, 4.5rem);
-      font-weight: 300;
-      font-style: italic;
-      color: var(--cream);
-      line-height: 1.2;
-      letter-spacing: -.01em;
-    }
-    .manifesto-quote strong { font-style: normal; font-weight: 600; }
-
-    .manifesto-divider {
-      width: 48px; height: 1px;
-      background: var(--terra);
-      margin: 48px auto;
-    }
-
-    .manifesto-body {
-      font-size: .9rem;
-      color: rgba(245,240,235,.45);
-      line-height: 1.9;
-      max-width: 480px;
-      margin: 0 auto;
-      letter-spacing: .03em;
-    }
-
-    /* ─── Materials ────────────────────────────────────────────── */
-    #materials { padding: 120px 48px; border-top: 1px solid var(--border); }
-    .materials-header { margin-bottom: 80px; }
-
-    .materials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-    }
-
-    .material-item {
-      background: var(--cream);
-      padding: 56px 40px;
-      transition: background .4s;
-      cursor: none;
-    }
-    .material-item:hover { background: #f0ebe4; }
-
-    .material-icon { width: 48px; height: 48px; margin-bottom: 32px; position: relative; }
-
-    .icon-wood { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
-    .wood-line { height: 1px; background: var(--charcoal); opacity: .4; border-radius: 1px; }
-    .wood-line:nth-child(odd)  { margin-left: 4px; opacity: .6; }
-    .wood-line:nth-child(even) { margin-right: 4px; }
-
-    .icon-metal::before {
-      content: '';
-      position: absolute;
-      inset: 8px;
-      border: 1.5px solid var(--charcoal);
-      transform: rotate(45deg);
-    }
-    .icon-metal::after {
-      content: '';
-      position: absolute;
-      inset: 16px;
-      border: 1px solid var(--muted);
-      transform: rotate(45deg);
-    }
-
-    .icon-fabric { overflow: hidden; }
-    .icon-fabric::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        repeating-linear-gradient(0deg,   transparent, transparent 5px, rgba(28,26,24,.12) 5px, rgba(28,26,24,.12) 6px),
-        repeating-linear-gradient(90deg,  transparent, transparent 5px, rgba(28,26,24,.12) 5px, rgba(28,26,24,.12) 6px);
-    }
-    .icon-fabric::after {
-      content: '';
-      position: absolute;
-      inset: 16px;
-      border-radius: 50%;
-      background: rgba(122,140,110,.2);
-      border: 1px solid rgba(122,140,110,.4);
-    }
-
-    .material-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.8rem;
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
       font-weight: 300;
       color: var(--charcoal);
+      line-height: 1.2;
+    }
+    .section-title em { font-style: italic; color: var(--terra); }
+
+    .section-link {
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--terra);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: gap .2s;
+    }
+    .section-link:hover { gap: 10px; }
+
+    /* Grid de ambientes */
+    .ambientes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .amb-card {
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--cream);
+      transition: transform .3s, box-shadow .3s;
+      cursor: pointer;
+    }
+    .amb-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(44,42,39,.12);
+    }
+
+    .amb-photo {
+      height: 240px;
+      position: relative;
+      overflow: hidden;
+    }
+    .amb-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .5s ease;
+    }
+    .amb-card:hover .amb-photo img { transform: scale(1.05); }
+
+    .amb-photo-tag {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(253,252,250,.88);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+    }
+
+    .amb-body {
+      padding: 20px;
+    }
+
+    .amb-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+
+    .amb-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
       margin-bottom: 16px;
     }
-    .material-text { font-size: .85rem; line-height: 1.8; color: var(--muted); }
+    .chip {
+      font-size: .63rem;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--mid);
+      background: rgba(44,42,39,.06);
+      padding: 3px 9px;
+      border-radius: 100px;
+    }
 
-    /* ─── Process ──────────────────────────────────────────────── */
-    #process {
-      padding: 120px 48px;
-      background: var(--charcoal);
+    .amb-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .amb-price {
+      font-size: .85rem;
+      color: var(--charcoal);
+    }
+    .amb-price strong {
+      font-weight: 600;
+      color: var(--terra);
+      font-size: 1rem;
+    }
+    .amb-btn {
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--terra);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap .2s;
+    }
+    .amb-card:hover .amb-btn { gap: 8px; }
+
+    /* ── Seção: Como funciona ──────────────────────────────────── */
+    #como {
+      background: var(--cream);
+      padding: 96px 64px;
+    }
+
+    .como-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .como-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 36px 32px;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .como-num {
+      font-family: 'Fraunces', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: rgba(44,42,39,.08);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .como-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .como-icon-1 { background: rgba(196,98,45,.1); }
+    .como-icon-2 { background: rgba(106,128,96,.1); }
+    .como-icon-3 { background: rgba(217,168,78,.1); }
+
+    .como-title {
+      font-weight: 600;
+      font-size: .95rem;
+      color: var(--charcoal);
+      margin-bottom: 10px;
+    }
+    .como-desc {
+      font-size: .875rem;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    /* ── Seção: Materiais ──────────────────────────────────────── */
+    #materiais {
+      padding: 96px 64px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 80px;
       align-items: center;
     }
 
-    .process-label { color: var(--terra); }
-    .process-heading {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 4vw, 3.5rem);
-      font-weight: 300;
-      color: var(--cream);
-      line-height: 1.15;
-      letter-spacing: -.01em;
+    .materiais-photo {
+      border-radius: 20px;
+      overflow: hidden;
+      height: 480px;
     }
-    .process-heading em { font-style: italic; color: rgba(245,240,235,.5); }
+    .materiais-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
 
-    .process-steps { list-style: none; }
-    .process-step {
-      padding: 28px 0;
-      border-bottom: 1px solid rgba(245,240,235,.08);
+    .materiais-text {}
+    .materiais-list {
+      margin-top: 36px;
       display: flex;
-      gap: 24px;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .mat-item {
+      display: flex;
       align-items: flex-start;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
     }
-    .step-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.5rem;
-      font-weight: 300;
-      color: rgba(245,240,235,.12);
-      line-height: 1;
-      min-width: 48px;
+    .mat-item:last-child { border-bottom: none; }
+    .mat-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--terra);
+      flex-shrink: 0;
+      margin-top: 7px;
     }
-    .step-name {
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--cream);
-      margin-bottom: 8px;
-    }
-    .step-desc { font-size: .85rem; color: rgba(245,240,235,.4); line-height: 1.7; }
-
-    /* ─── Contact ──────────────────────────────────────────────── */
-    #contact {
-      padding: 140px 48px;
-      text-align: center;
-      border-top: 1px solid var(--border);
-    }
-
-    .contact-label { color: var(--sage); }
-
-    .contact-heading {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 6vw, 5.5rem);
-      font-weight: 300;
+    .mat-name {
+      font-weight: 600;
+      font-size: .875rem;
       color: var(--charcoal);
-      line-height: 1.05;
-      letter-spacing: -.02em;
-      margin: 24px 0 48px;
+      margin-bottom: 4px;
     }
-    .contact-heading em { font-style: italic; color: var(--terra); }
-
-    .contact-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-
-    .btn-dark {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 18px 40px;
-      background: var(--charcoal);
-      color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: none;
-      border: 1px solid var(--charcoal);
-      transition: background .35s, border-color .35s, gap .35s;
+    .mat-desc {
+      font-size: .8rem;
+      color: var(--mid);
+      line-height: 1.7;
     }
-    .btn-dark:hover { background: var(--terra); border-color: var(--terra); gap: 20px; }
 
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 18px 40px;
-      background: transparent;
-      color: var(--charcoal);
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: none;
+    /* ── Seção: Depoimentos ────────────────────────────────────── */
+    #depoimentos {
+      background: var(--cream);
+      padding: 96px 64px;
+    }
+
+    .dep-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .dep-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px;
       border: 1px solid var(--border);
-      transition: border-color .35s;
     }
-    .btn-outline:hover { border-color: var(--charcoal); }
 
-    /* ─── Footer ───────────────────────────────────────────────── */
-    footer {
-      padding: 48px;
+    .dep-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 14px;
+    }
+    .dep-stars span {
+      color: var(--yellow);
+      font-size: .9rem;
+    }
+
+    .dep-text {
+      font-size: .88rem;
+      color: var(--mid);
+      line-height: 1.75;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .dep-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dep-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: .75rem;
+      color: var(--charcoal);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .dep-author strong {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    .dep-author span {
+      font-size: .72rem;
+      color: var(--mid);
+    }
+
+    /* ── CTA Final ─────────────────────────────────────────────── */
+    #cta {
+      padding: 100px 64px;
+      text-align: center;
       background: var(--charcoal);
+    }
+
+    #cta .tag { color: rgba(253,252,250,.5); }
+
+    .cta-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.2;
+      margin: 16px 0 40px;
+    }
+    .cta-title em { font-style: italic; color: #e8a87c; }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-light {
+      background: var(--white);
+      color: var(--charcoal);
+    }
+    .btn-light:hover { background: var(--cream); }
+    .btn-outline-light {
+      background: transparent;
+      color: rgba(253,252,250,.75);
+      border: 1.5px solid rgba(253,252,250,.2);
+    }
+    .btn-outline-light:hover {
+      border-color: rgba(253,252,250,.5);
+      color: var(--white);
+    }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    footer {
+      background: #1e1c1a;
+      padding: 56px 64px 32px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(253,252,250,.08);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .footer-brand-sub {
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(253,252,250,.35);
+      margin-bottom: 16px;
+    }
+    .footer-desc {
+      font-size: .82rem;
+      color: rgba(253,252,250,.45);
+      line-height: 1.7;
+      max-width: 260px;
+    }
+
+    .footer-col-title {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(253,252,250,.4);
+      margin-bottom: 16px;
+    }
+    .footer-col-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-col-links a {
+      font-size: .82rem;
+      color: rgba(253,252,250,.55);
+      transition: color .2s;
+    }
+    .footer-col-links a:hover { color: var(--white); }
+
+    .footer-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 24px;
+      gap: 12px;
     }
-
-    .footer-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: 1.25rem;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--cream);
+    .footer-copy {
+      font-size: .72rem;
+      color: rgba(253,252,250,.25);
     }
-    .footer-copy { font-size: .7rem; letter-spacing: .1em; color: rgba(245,240,235,.3); }
-
-    .footer-social { display: flex; gap: 24px; list-style: none; }
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
     .footer-social a {
-      font-size: .7rem;
-      letter-spacing: .15em;
+      font-size: .72rem;
+      letter-spacing: .1em;
       text-transform: uppercase;
-      color: rgba(245,240,235,.35);
-      text-decoration: none;
-      cursor: none;
-      transition: color .3s;
+      color: rgba(253,252,250,.35);
+      transition: color .2s;
     }
-    .footer-social a:hover { color: var(--terra); }
+    .footer-social a:hover { color: rgba(253,252,250,.8); }
 
-    /* ─── Reveal Animations ────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity .8s cubic-bezier(.25,.46,.45,.94), transform .8s cubic-bezier(.25,.46,.45,.94);
+    /* ── Responsivo ────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .ambientes-grid { grid-template-columns: repeat(2, 1fr); }
+      .dep-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
     }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    .reveal-left {
-      opacity: 0;
-      transform: translateX(-30px);
-      transition: opacity .9s cubic-bezier(.25,.46,.45,.94), transform .9s cubic-bezier(.25,.46,.45,.94);
-    }
-    .reveal-left.visible { opacity: 1; transform: translateX(0); }
-
-    .reveal-right {
-      opacity: 0;
-      transform: translateX(30px);
-      transition: opacity .9s cubic-bezier(.25,.46,.45,.94), transform .9s cubic-bezier(.25,.46,.45,.94);
-    }
-    .reveal-right.visible { opacity: 1; transform: translateX(0); }
-
-    .reveal-delay-1 { transition-delay: .1s; }
-    .reveal-delay-2 { transition-delay: .2s; }
-    .reveal-delay-3 { transition-delay: .3s; }
-    .reveal-delay-4 { transition-delay: .4s; }
-
-    /* ─── Responsive ───────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 20px 24px; }
-      nav.scrolled { padding: 14px 24px; }
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
       .nav-links { display: none; }
-      .nav-logo { color: var(--charcoal) !important; }
+      .nav-menu-btn { display: block; }
 
-      #hero { padding: 0 24px 64px; }
-      .hero-vline { display: none; }
-      .hero-bottom { display: none; }
-      .hero-title { font-size: clamp(3rem, 12vw, 5rem); }
+      #hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-text { padding: 48px 24px 40px; order: 2; }
+      .hero-photo { height: 55vw; min-height: 260px; order: 1; }
+      .hero-trust { gap: 20px; }
 
-      #about { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
-      .about-stats { gap: 32px; }
+      #banner { padding: 16px 24px; gap: 0; overflow-x: auto; }
+      .banner-sep { display: none; }
 
-      .collection-header { padding: 60px 24px 40px; flex-direction: column; gap: 16px; }
-      .cards-track-wrap { padding: 0 24px 16px; }
-      .track-progress { width: calc(100% - 48px); margin: 16px 24px 0; }
-      .product-card { flex: 0 0 280px; }
-      .card-visual { height: 340px; }
-
-      #manifesto { padding: 80px 24px; }
-      #materials { padding: 80px 24px; }
-      .materials-grid { grid-template-columns: 1fr; }
-      #process { grid-template-columns: 1fr; gap: 48px; padding: 80px 24px; }
-      #contact { padding: 100px 24px; }
-      footer { padding: 32px 24px; flex-direction: column; text-align: center; }
+      #ambientes, #como, #depoimentos, #cta { padding: 64px 24px; }
+      #materiais { padding: 64px 24px; grid-template-columns: 1fr; gap: 40px; }
+      .materiais-photo { height: 280px; }
+      .ambientes-grid { grid-template-columns: 1fr; gap: 16px; }
+      .como-grid { grid-template-columns: 1fr; gap: 16px; }
+      .dep-grid { grid-template-columns: 1fr; }
+      footer { padding: 40px 24px 24px; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-      .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
+      .fade-in { opacity: 1; transform: none; transition: none; }
     }
   </style>
 </head>
 <body>
 
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
-  <div id="grain" aria-hidden="true"></div>
-
+  <!-- ── Nav ── -->
   <nav id="nav" role="navigation" aria-label="Menu principal">
-    <a href="#" class="nav-logo">Moave</a>
+    <a href="#" class="nav-brand" aria-label="Moave Casa e Decoração">
+      <span class="nav-brand-name">Moave</span>
+      <span class="nav-brand-sub">Casa e Decoração</span>
+    </a>
+
     <ul class="nav-links">
-      <li><a href="#collection">Coleção</a></li>
-      <li><a href="#materials">Materiais</a></li>
-      <li><a href="#process">Processo</a></li>
-      <li><a href="#contact">Contato</a></li>
+      <li><a href="#ambientes">Ambientes</a></li>
+      <li><a href="#como">Como funciona</a></li>
+      <li><a href="#materiais">Materiais</a></li>
+      <li><a href="#depoimentos">Depoimentos</a></li>
     </ul>
+
+    <a href="#cta" class="btn nav-cta">Fale conosco</a>
+
+    <button class="nav-menu-btn" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
-  <!-- Hero -->
-  <section id="hero" aria-label="Seção principal">
-    <div class="hero-bg">
+  <!-- ── Hero ── -->
+  <section id="hero" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <span class="tag fade-in">Móveis para todo lar ✦</span>
+      <h1 id="hero-title" class="hero-title fade-in delay-1">
+        Monte seu lar<br>do jeito que <em>você gosta</em>
+      </h1>
+      <p class="hero-desc fade-in delay-2">
+        Móveis bonitos, resistentes e com preço justo. A Moave acredita que ter um lar bem decorado não precisa custar caro.
+      </p>
+      <div class="hero-actions fade-in delay-3">
+        <a href="#ambientes" class="btn btn-fill">Ver ambientes</a>
+        <a href="#como" class="btn btn-ghost">Como funciona</a>
+      </div>
+      <div class="hero-trust fade-in delay-4">
+        <div class="trust-item">
+          <strong>+340</strong>
+          <span>Lares decorados</span>
+        </div>
+        <div class="trust-item">
+          <strong>5★</strong>
+          <span>Avaliação média</span>
+        </div>
+        <div class="trust-item">
+          <strong>12x</strong>
+          <span>Sem juros</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-photo">
       <img
-        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=85&auto=format&fit=crop"
-        alt="Casa moderna com design contemporâneo"
-        id="hero-img"
+        src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&q=85&auto=format&fit=crop"
+        alt="Sala de jantar aconchegante com mesa de madeira e cadeiras verdes"
         loading="eager"
       />
-    </div>
-    <div class="hero-vline" aria-hidden="true"></div>
-    <div class="hero-overlay" aria-hidden="true"></div>
-
-    <div class="hero-content" id="hero-content">
-      <span class="hero-tagline">Design Brasileiro · Alto Padrão</span>
-      <p class="hero-subtitle">Móveis que contam histórias.</p>
-      <h1 class="hero-title">O seu<br><em>espaço.</em></h1>
-      <a href="#collection" class="btn-primary">
-        Ver Coleção
-        <span class="btn-arrow" aria-hidden="true"></span>
-      </a>
-    </div>
-
-    <div class="hero-bottom" aria-hidden="true">
-      <p>Arquitetura de<br>interiores e<br>mobiliário autoral</p>
-    </div>
-
-    <div class="scroll-hint" aria-hidden="true">
-      <div class="scroll-hint-line"></div>
-      <span>Scroll</span>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section id="about" aria-labelledby="about-heading">
-    <div class="reveal-left">
-      <span class="about-label">Sobre a Moave</span>
-      <h2 id="about-heading" class="about-heading">
-        Onde matéria<br>encontra <em>significado</em>
-      </h2>
-      <div class="about-stats">
-        <div>
-          <span class="stat-num">12</span>
-          <span class="stat-label">Anos de ofício</span>
-        </div>
-        <div>
-          <span class="stat-num">340+</span>
-          <span class="stat-label">Projetos realizados</span>
-        </div>
-        <div>
-          <span class="stat-num">100%</span>
-          <span class="stat-label">Produção nacional</span>
+      <div class="hero-photo-badge">
+        <div class="badge-dot"></div>
+        <div class="badge-text">
+          <strong>Frete grátis</strong>
+          <span>Para todo o Brasil</span>
         </div>
       </div>
     </div>
-    <div class="reveal-right reveal-delay-2">
-      <p class="about-text">
-        A Moave nasceu da crença de que um móvel vai muito além da função. É memória, é identidade, é a marca silenciosa de quem você é. Cada peça é desenhada à mão, produzida em pequena escala e entregue com a intenção de durar gerações.
-      </p>
-      <p class="about-text" style="margin-top:20px">
-        Trabalhamos com madeiras certificadas do Brasil, metais de acabamento artesanal e tecidos que abraçam o tempo sem envelhecer.
-      </p>
-    </div>
   </section>
 
-  <!-- Collection -->
-  <section id="collection" aria-labelledby="collection-heading">
-    <div class="collection-header">
+  <!-- ── Banner ── -->
+  <div id="banner" aria-hidden="true">
+    <div class="banner-item">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      Parcelamento em até 12x sem juros
+    </div>
+    <div class="banner-sep"></div>
+    <div class="banner-item">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="1.5"/><circle cx="18.5" cy="18.5" r="1.5"/></svg>
+      Entrega em todo o Brasil
+    </div>
+    <div class="banner-sep"></div>
+    <div class="banner-item">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      Garantia de 1 ano em todos os produtos
+    </div>
+    <div class="banner-sep"></div>
+    <div class="banner-item">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+      Preço justo, sem surpresas
+    </div>
+  </div>
+
+  <!-- ── Ambientes ── -->
+  <section id="ambientes" aria-labelledby="amb-heading">
+    <div class="section-intro fade-in">
       <div>
-        <span class="section-label reveal">Coleção 2025</span>
-        <h2 id="collection-heading" class="section-heading reveal reveal-delay-1">Peças autorais</h2>
+        <span class="tag">Inspire-se</span>
+        <h2 id="amb-heading" class="section-title">
+          Ambientes prontos<br>para o seu <em>estilo</em>
+        </h2>
       </div>
-      <a href="#contact" class="collection-link reveal">Ver catálogo completo</a>
-    </div>
-
-    <div class="cards-track-wrap" id="cards-track-wrap" role="region" aria-label="Carrossel de produtos">
-      <div class="cards-track">
-
-        <article class="product-card">
-          <div class="card-visual">
-            <div class="card-bg card-bg-1"></div>
-            <div class="card-deco" aria-hidden="true"></div>
-            <div class="card-deco-2" aria-hidden="true"></div>
-            <div class="furniture-silhouette chair" aria-hidden="true"></div>
-            <div class="card-overlay"></div>
-          </div>
-          <div class="card-info">
-            <span class="card-num">001</span>
-            <h3 class="card-name">Cadeira Serra</h3>
-            <p class="card-desc">Carvalho natural · Linho bege</p>
-            <div class="card-price">
-              <span>R$ 4.800</span>
-              <a href="#contact" class="card-cta">Solicitar →</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="product-card">
-          <div class="card-visual">
-            <div class="card-bg card-bg-2"></div>
-            <div class="card-deco" aria-hidden="true"></div>
-            <div class="furniture-silhouette sofa" aria-hidden="true"></div>
-            <div class="card-overlay"></div>
-          </div>
-          <div class="card-info">
-            <span class="card-num">002</span>
-            <h3 class="card-name">Sofá Bruma</h3>
-            <p class="card-desc">Freijó escurecido · Veludo verde</p>
-            <div class="card-price">
-              <span>R$ 12.400</span>
-              <a href="#contact" class="card-cta">Solicitar →</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="product-card">
-          <div class="card-visual">
-            <div class="card-bg card-bg-3"></div>
-            <div class="card-deco" aria-hidden="true"></div>
-            <div class="furniture-silhouette table-piece" aria-hidden="true"></div>
-            <div class="card-overlay"></div>
-          </div>
-          <div class="card-info">
-            <span class="card-num">003</span>
-            <h3 class="card-name">Mesa Véu</h3>
-            <p class="card-desc">Jequitibá · Ferro forjado</p>
-            <div class="card-price">
-              <span>R$ 7.200</span>
-              <a href="#contact" class="card-cta">Solicitar →</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="product-card">
-          <div class="card-visual">
-            <div class="card-bg card-bg-4"></div>
-            <div class="card-deco" aria-hidden="true"></div>
-            <div class="furniture-silhouette shelf" aria-hidden="true"></div>
-            <div class="card-overlay"></div>
-          </div>
-          <div class="card-info">
-            <span class="card-num">004</span>
-            <h3 class="card-name">Estante Névoa</h3>
-            <p class="card-desc">Nogal · Preto fosco</p>
-            <div class="card-price">
-              <span>R$ 9.600</span>
-              <a href="#contact" class="card-cta">Solicitar →</a>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </div>
-
-    <div class="track-progress" aria-hidden="true">
-      <div class="track-progress-bar" id="progress-bar"></div>
-    </div>
-  </section>
-
-  <!-- Manifesto -->
-  <section id="manifesto" aria-labelledby="manifesto-quote">
-    <div class="manifesto-bg-shapes" aria-hidden="true">
-      <div class="mbg-1"></div>
-      <div class="mbg-2"></div>
-      <div class="mbg-line"></div>
-    </div>
-    <div class="manifesto-content" id="manifesto-content">
-      <span class="manifesto-pre reveal">Manifesto</span>
-      <blockquote>
-        <p id="manifesto-quote" class="manifesto-quote reveal reveal-delay-1">
-          "Cada peça é uma conversa<br>entre <strong>forma</strong> e função."
-        </p>
-      </blockquote>
-      <div class="manifesto-divider reveal reveal-delay-2"></div>
-      <p class="manifesto-body reveal reveal-delay-3">
-        Acreditamos que o design precisa de coragem para ser simples. Que o belo não grita — ele permanece. Na Moave, cada escolha de material, cada junta, cada detalhe existe por uma razão.
-      </p>
-    </div>
-  </section>
-
-  <!-- Materials -->
-  <section id="materials" aria-labelledby="materials-heading">
-    <div class="materials-header">
-      <span class="section-label reveal">Nossos Materiais</span>
-      <h2 id="materials-heading" class="section-heading reveal reveal-delay-1">
-        A matéria-prima<br>da permanência
-      </h2>
-    </div>
-    <div class="materials-grid">
-      <div class="material-item reveal">
-        <div class="material-icon" aria-hidden="true">
-          <div class="icon-wood">
-            <div class="wood-line"></div><div class="wood-line"></div>
-            <div class="wood-line"></div><div class="wood-line"></div>
-            <div class="wood-line"></div><div class="wood-line"></div>
-            <div class="wood-line"></div>
-          </div>
-        </div>
-        <h3 class="material-name">Madeira</h3>
-        <p class="material-text">Trabalhamos exclusivamente com madeiras certificadas do Brasil — carvalho, jequitibá, freijó e nogal. Cada tora é selecionada manualmente por nossos mestres marceneiros, garantindo veios únicos e beleza que amadurece com o tempo.</p>
-      </div>
-      <div class="material-item reveal reveal-delay-2">
-        <div class="material-icon icon-metal" aria-hidden="true"></div>
-        <h3 class="material-name">Metal</h3>
-        <p class="material-text">Ferro forjado, aço escovado e latão oxidado compõem as estruturas que sustentam e adornam nossas peças. O metal na Moave não é suporte — é assinatura. Cada solda é feita à mão por ferreiros especializados no Sul do Brasil.</p>
-      </div>
-      <div class="material-item reveal reveal-delay-4">
-        <div class="material-icon icon-fabric" aria-hidden="true"></div>
-        <h3 class="material-name">Tecido</h3>
-        <p class="material-text">Linho belga, veludo italiano e algodão orgânico brasileiro. Nossas estofarias utilizam tecidos com resistência comprovada de mais de 30 anos. A paleta é cuidadosamente curada para dialogar com a madeira e o ambiente.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Process -->
-  <section id="process" aria-labelledby="process-heading">
-    <div class="reveal-left">
-      <span class="about-label process-label">Como Trabalhamos</span>
-      <h2 id="process-heading" class="process-heading">
-        Do esboço<br>à <em>entrega</em>
-      </h2>
-    </div>
-    <ol class="process-steps reveal-right">
-      <li class="process-step">
-        <span class="step-num">01</span>
-        <div>
-          <p class="step-name">Briefing &amp; Conceito</p>
-          <p class="step-desc">Conversamos sobre seu espaço, suas rotinas e o que você quer sentir ao entrar no ambiente. Nada começa sem escuta.</p>
-        </div>
-      </li>
-      <li class="process-step">
-        <span class="step-num">02</span>
-        <div>
-          <p class="step-name">Desenho &amp; Aprovação</p>
-          <p class="step-desc">Nossa equipe cria renders e esboços técnicos. Você aprova cada detalhe antes de qualquer corte de madeira.</p>
-        </div>
-      </li>
-      <li class="process-step">
-        <span class="step-num">03</span>
-        <div>
-          <p class="step-name">Produção Artesanal</p>
-          <p class="step-desc">Cada peça é construída manualmente em nosso ateliê em Belo Horizonte. Prazo médio de 45 a 90 dias.</p>
-        </div>
-      </li>
-      <li class="process-step">
-        <span class="step-num">04</span>
-        <div>
-          <p class="step-name">Entrega &amp; Instalação</p>
-          <p class="step-desc">Entregamos e instalamos pessoalmente em todo o Brasil. O projeto só está completo quando você estiver satisfeito.</p>
-        </div>
-      </li>
-    </ol>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" aria-labelledby="contact-heading">
-    <span class="section-label contact-label reveal">Vamos conversar</span>
-    <h2 id="contact-heading" class="contact-heading reveal reveal-delay-1">
-      Comece a construir<br><em>sua história.</em>
-    </h2>
-    <div class="contact-actions reveal reveal-delay-2">
-      <a href="mailto:ola@moave.com.br" class="btn-dark">
-        Falar com a equipe
-        <span class="btn-arrow" aria-hidden="true"></span>
+      <a href="#cta" class="section-link">
+        Ver todos
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
       </a>
-      <a href="#collection" class="btn-outline">Ver catálogo</a>
+    </div>
+
+    <div class="ambientes-grid">
+
+      <!-- Sala de Jantar -->
+      <article class="amb-card fade-in delay-1">
+        <div class="amb-photo">
+          <img
+            src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80&auto=format&fit=crop"
+            alt="Sala de jantar com mesa de madeira e cadeiras verdes"
+            loading="lazy"
+          />
+          <span class="amb-photo-tag">Sala de Jantar</span>
+        </div>
+        <div class="amb-body">
+          <h3 class="amb-name">Conjunto Bruma</h3>
+          <div class="amb-chips">
+            <span class="chip">Mesa</span>
+            <span class="chip">6 Cadeiras</span>
+            <span class="chip">Estante</span>
+            <span class="chip">Luminária</span>
+          </div>
+          <div class="amb-footer">
+            <div class="amb-price">
+              A partir de<br>
+              <strong>R$ 1.890</strong>
+            </div>
+            <a href="#cta" class="amb-btn">
+              Quero esse →
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Sala de Estar -->
+      <article class="amb-card fade-in delay-2">
+        <div class="amb-photo">
+          <img
+            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80&auto=format&fit=crop"
+            alt="Sala de estar com sofá, mesa de centro e decoração"
+            loading="lazy"
+          />
+          <span class="amb-photo-tag">Sala de Estar</span>
+        </div>
+        <div class="amb-body">
+          <h3 class="amb-name">Conjunto Serra</h3>
+          <div class="amb-chips">
+            <span class="chip">Sofá</span>
+            <span class="chip">Mesa Centro</span>
+            <span class="chip">Poltrona</span>
+            <span class="chip">Rack</span>
+          </div>
+          <div class="amb-footer">
+            <div class="amb-price">
+              A partir de<br>
+              <strong>R$ 2.490</strong>
+            </div>
+            <a href="#cta" class="amb-btn">
+              Quero esse →
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Quarto -->
+      <article class="amb-card fade-in delay-3">
+        <div class="amb-photo">
+          <img
+            src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=700&q=80&auto=format&fit=crop"
+            alt="Quarto com cama, criado-mudo e cômoda"
+            loading="lazy"
+          />
+          <span class="amb-photo-tag">Quarto</span>
+        </div>
+        <div class="amb-body">
+          <h3 class="amb-name">Conjunto Névoa</h3>
+          <div class="amb-chips">
+            <span class="chip">Cama</span>
+            <span class="chip">Criado-mudo</span>
+            <span class="chip">Cômoda</span>
+            <span class="chip">Espelho</span>
+          </div>
+          <div class="amb-footer">
+            <div class="amb-price">
+              A partir de<br>
+              <strong>R$ 1.690</strong>
+            </div>
+            <a href="#cta" class="amb-btn">
+              Quero esse →
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Home Office -->
+      <article class="amb-card fade-in delay-4">
+        <div class="amb-photo">
+          <img
+            src="https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=700&q=80&auto=format&fit=crop"
+            alt="Home office com escrivaninha e estante"
+            loading="lazy"
+          />
+          <span class="amb-photo-tag">Home Office</span>
+        </div>
+        <div class="amb-body">
+          <h3 class="amb-name">Conjunto Véu</h3>
+          <div class="amb-chips">
+            <span class="chip">Escrivaninha</span>
+            <span class="chip">Cadeira</span>
+            <span class="chip">Estante</span>
+            <span class="chip">Prateleiras</span>
+          </div>
+          <div class="amb-footer">
+            <div class="amb-price">
+              A partir de<br>
+              <strong>R$ 990</strong>
+            </div>
+            <a href="#cta" class="amb-btn">
+              Quero esse →
+            </a>
+          </div>
+        </div>
+      </article>
+
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- ── Como funciona ── -->
+  <section id="como" aria-labelledby="como-heading">
+    <div class="section-intro fade-in">
+      <div>
+        <span class="tag">Simples assim</span>
+        <h2 id="como-heading" class="section-title">
+          Do escolher ao <em>receber</em>
+        </h2>
+      </div>
+    </div>
+
+    <div class="como-grid">
+      <div class="como-card fade-in delay-1">
+        <div class="como-num">01</div>
+        <div class="como-icon como-icon-1">
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#C4622D" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10"/></svg>
+        </div>
+        <h3 class="como-title">Escolha o ambiente</h3>
+        <p class="como-desc">Navegue pelos ambientes prontos ou nos fale o que você precisa. Temos opções para toda casa e todo orçamento.</p>
+      </div>
+
+      <div class="como-card fade-in delay-2">
+        <div class="como-num">02</div>
+        <div class="como-icon como-icon-2">
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#6A8060" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        </div>
+        <h3 class="como-title">Fale com a gente</h3>
+        <p class="como-desc">Entre em contato pelo WhatsApp, e-mail ou telefone. Nossa equipe te ajuda a montar o ambiente ideal sem complicação.</p>
+      </div>
+
+      <div class="como-card fade-in delay-3">
+        <div class="como-num">03</div>
+        <div class="como-icon como-icon-3">
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#D9A84E" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <h3 class="como-title">Receba em casa</h3>
+        <p class="como-desc">Entregamos em todo o Brasil com cuidado. Montagem inclusa nas principais cidades. Pagamento em até 12x sem juros.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Materiais ── -->
+  <section id="materiais" aria-labelledby="mat-heading">
+    <div class="materiais-photo fade-in">
+      <img
+        src="https://images.unsplash.com/photo-1538688423619-a81d3f23454b?w=900&q=80&auto=format&fit=crop"
+        alt="Detalhe de madeira e acabamento dos móveis Moave"
+        loading="lazy"
+      />
+    </div>
+    <div class="materiais-text fade-in delay-2">
+      <span class="tag">Qualidade que dura</span>
+      <h2 id="mat-heading" class="section-title">
+        Materiais escolhidos<br>com <em>cuidado</em>
+      </h2>
+      <p style="color:var(--mid);font-size:.9rem;margin-top:16px;line-height:1.75">
+        Bom preço não significa baixa qualidade. Na Moave, cada material é selecionado para durar — bonito hoje e daqui a muitos anos.
+      </p>
+      <div class="materiais-list">
+        <div class="mat-item">
+          <div class="mat-dot"></div>
+          <div>
+            <p class="mat-name">Madeira certificada</p>
+            <p class="mat-desc">Usamos madeira de reflorestamento certificada com acabamento resistente a riscos e manchas.</p>
+          </div>
+        </div>
+        <div class="mat-item">
+          <div class="mat-dot"></div>
+          <div>
+            <p class="mat-name">Tecidos resistentes</p>
+            <p class="mat-desc">Estofados em tecidos de alta durabilidade — fáceis de limpar e que aguentam o dia a dia da família.</p>
+          </div>
+        </div>
+        <div class="mat-item">
+          <div class="mat-dot"></div>
+          <div>
+            <p class="mat-name">Metal e estrutura</p>
+            <p class="mat-desc">Estruturas em aço com pintura eletrostática — sem enferrujar, sem balançar, sem surpresa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Depoimentos ── -->
+  <section id="depoimentos" aria-labelledby="dep-heading">
+    <div class="section-intro fade-in">
+      <div>
+        <span class="tag">Quem já comprou</span>
+        <h2 id="dep-heading" class="section-title">
+          A casa deles ficou<br><em>incrível</em>
+        </h2>
+      </div>
+    </div>
+
+    <div class="dep-grid">
+      <div class="dep-card fade-in delay-1">
+        <div class="dep-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="dep-text">"Comprei o conjunto de sala de jantar e ficou perfeito. O preço era bem mais justo que as outras lojas e a qualidade superou minha expectativa."</p>
+        <div class="dep-author">
+          <div class="dep-avatar">AM</div>
+          <div>
+            <strong>Ana Martins</strong>
+            <span>Belo Horizonte, MG</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dep-card fade-in delay-2">
+        <div class="dep-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="dep-text">"Montaram tudo rapidinho e a equipe foi super atenciosa. Já indiquei para minha irmã. O sofá é lindo e resistente, meu filho adora!"</p>
+        <div class="dep-author">
+          <div class="dep-avatar">RC</div>
+          <div>
+            <strong>Ricardo Costa</strong>
+            <span>São Paulo, SP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dep-card fade-in delay-3">
+        <div class="dep-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="dep-text">"Parcelei em 12x e ficou muito no meu orçamento. O quarto ficou igualzinho à foto do site. Entrega super rápida e sem nenhum dano."</p>
+        <div class="dep-author">
+          <div class="dep-avatar">PL</div>
+          <div>
+            <strong>Paula Lima</strong>
+            <span>Goiânia, GO</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Final ── -->
+  <section id="cta" aria-labelledby="cta-title">
+    <span class="tag fade-in">Vamos começar?</span>
+    <h2 id="cta-title" class="cta-title fade-in delay-1">
+      Seu lar novo está<br>a um clique de <em>distância</em>
+    </h2>
+    <div class="cta-actions fade-in delay-2">
+      <a href="https://wa.me/5531999999999" class="btn btn-light" aria-label="Falar no WhatsApp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chamar no WhatsApp
+      </a>
+      <a href="mailto:ola@moave.com.br" class="btn btn-outline-light" aria-label="Enviar e-mail">
+        Enviar e-mail
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
   <footer role="contentinfo">
-    <span class="footer-logo">Moave</span>
-    <p class="footer-copy">© 2025 Moave. Todos os direitos reservados.</p>
-    <ul class="footer-social">
-      <li><a href="#">Instagram</a></li>
-      <li><a href="#">Pinterest</a></li>
-      <li><a href="#">WhatsApp</a></li>
-    </ul>
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand-name">Moave</p>
+        <p class="footer-brand-sub">Casa e Decoração</p>
+        <p class="footer-desc">Móveis bonitos e acessíveis para todos os lares brasileiros. Qualidade que dura, preço que cabe no bolso.</p>
+      </div>
+      <div>
+        <p class="footer-col-title">Navegar</p>
+        <div class="footer-col-links">
+          <a href="#ambientes">Ambientes</a>
+          <a href="#como">Como funciona</a>
+          <a href="#materiais">Materiais</a>
+          <a href="#depoimentos">Depoimentos</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Ajuda</p>
+        <div class="footer-col-links">
+          <a href="#">Prazo de entrega</a>
+          <a href="#">Montagem</a>
+          <a href="#">Garantia</a>
+          <a href="#">Trocas e devoluções</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Contato</p>
+        <div class="footer-col-links">
+          <a href="https://wa.me/5531999999999">WhatsApp</a>
+          <a href="mailto:ola@moave.com.br">E-mail</a>
+          <a href="#">Instagram</a>
+          <a href="#">Pinterest</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Moave Casa e Decoração. Todos os direitos reservados.</p>
+      <div class="footer-social">
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+        <a href="#">WhatsApp</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
   </footer>
 
   <script>
-  // ── Cursor ──────────────────────────────────────────────────────
-  const dot  = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-  });
-
-  (function animateRing() {
-    rx += (mx - rx) * .12;
-    ry += (my - ry) * .12;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(animateRing);
-  })();
-
-  document.querySelectorAll('a, button, .product-card, .material-item, .btn-primary, .btn-dark, .btn-outline').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-  });
-
-  // ── Nav scroll ───────────────────────────────────────────────────
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 80);
-  }, { passive: true });
-
-  // ── Hero parallax ────────────────────────────────────────────────
-  const heroContent = document.getElementById('hero-content');
-  const heroBgImg   = document.querySelector('.hero-bg img');
-
-  window.addEventListener('scroll', () => {
-    const sy = window.scrollY;
-    const vh = window.innerHeight;
-    if (sy < vh) {
-      const p = sy / vh;
-      heroContent.style.transform = `translateY(${sy * .35}px)`;
-      heroContent.style.opacity   = 1 - p * 1.6;
-      if (heroBgImg) heroBgImg.style.transform = `scale(1) translateY(${sy * .2}px)`;
-    }
-  }, { passive: true });
-
-  // ── Manifesto parallax ───────────────────────────────────────────
-  const manifestoContent = document.getElementById('manifesto-content');
-  const manifesto = document.getElementById('manifesto');
-
-  new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    window.addEventListener('scroll', () => {
-      const rect   = manifesto.getBoundingClientRect();
-      const dist   = (rect.top + rect.height / 2 - window.innerHeight / 2) / (window.innerHeight / 2);
-      manifestoContent.style.transform = `translateY(${dist * 30}px)`;
-    }, { passive: true });
-  }, { threshold: 0 }).observe(manifesto);
-
   // ── Scroll reveal ────────────────────────────────────────────────
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
       }
     });
-  }, { threshold: .15, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
 
-  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 
-  // ── Horizontal scroll + drag ─────────────────────────────────────
-  const wrap = document.getElementById('cards-track-wrap');
-  const bar  = document.getElementById('progress-bar');
-  let isDown = false, startX, scrollLeft;
-
-  wrap.addEventListener('scroll', () => {
-    const max = wrap.scrollWidth - wrap.clientWidth;
-    bar.style.width = Math.max(15, max > 0 ? (wrap.scrollLeft / max) * 100 : 25) + '%';
-  }, { passive: true });
-
-  wrap.addEventListener('mousedown',  e => { isDown = true; startX = e.pageX - wrap.offsetLeft; scrollLeft = wrap.scrollLeft; });
-  wrap.addEventListener('mouseleave', () => isDown = false);
-  wrap.addEventListener('mouseup',    () => isDown = false);
-  wrap.addEventListener('mousemove',  e => {
-    if (!isDown) return;
-    e.preventDefault();
-    wrap.scrollLeft = scrollLeft - (e.pageX - wrap.offsetLeft - startX);
-  });
-
-  // ── Hero image zoom on load ──────────────────────────────────────
-  const heroImg = document.getElementById('hero-img');
-  if (heroImg.complete) heroImg.classList.add('loaded');
-  else heroImg.addEventListener('load', () => heroImg.classList.add('loaded'));
-
-  // ── Hero entrance stagger ────────────────────────────────────────
-  Array.from(document.getElementById('hero-content').children).forEach((el, i) => {
-    el.style.cssText += `opacity:0;transform:translateY(20px);transition:opacity .9s ${.2+i*.15}s cubic-bezier(.25,.46,.45,.94),transform .9s ${.2+i*.15}s cubic-bezier(.25,.46,.45,.94)`;
-    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 100);
+  // ── Hero items on load ───────────────────────────────────────────
+  document.querySelectorAll('#hero .fade-in').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 80);
   });
   </script>
 </body>
